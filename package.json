@@ -9,6 +9,8 @@
   "author": "David Casagrande",
   "license": "ISC",
   "devDependencies": {
-    "broccoli-writer": "^0.1.1"
+    "broccoli-writer": "^0.1.1",
+    "ejs": "^1.0.0",
+    "rsvp": "^3.0.16"
   }
 }
