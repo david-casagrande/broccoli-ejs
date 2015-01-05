@@ -15,20 +15,13 @@ BroccoliEJS.prototype.description = 'broccoli-ejs';
 
 BroccoliEJS.prototype.compileTemplate = function(template, callback) {
   if(path.extname(template) !== '.ejs') { return; }
-  return fs.readFile(this.inputTree + '/' + template, function(err, buf) {
-    if(err) { console.log(err); return; }
-    var contents = buf.toString('utf8');
-    var compiled = ejs.compile(contents, {
-      client: true,
-      compileDebug: true
-    });
 
-    var rep = /function anonymous/i,
-        replacement = 'if (typeof window.TEMPLATE === \'undefined\') { window.TEMPLATE = {}; }\nwindow.TEMPLATE["'+ path.basename(template, '.ejs') +'"] = function';
+  var data = fs.readFileSync(this.inputTree + '/' + template, 'utf8'),
+      compiled = ejs.compile(data, { client: true, compileDebug: true }),
+      baseName = path.basename(template, '.ejs'),
+      functionName = 'if (typeof window.TEMPLATE === \'undefined\') { window.TEMPLATE = {}; }\nwindow.TEMPLATE["'+ baseName +'"] = function';
 
-    var data = compiled.toString().replace(rep, replacement);
-    callback(data);
-  })
+  return compiled.toString().replace(/function anonymous/i, functionName);
 };
 
 BroccoliEJS.prototype.write = function(readTree, destDir) {
@@ -39,9 +32,8 @@ BroccoliEJS.prototype.write = function(readTree, destDir) {
           compiledTemplates = [];
 
       allTemplates.forEach(function(template) {
-        self.compileTemplate(template, function(data) {
-          fs.writeFileSync(destDir + '/template_' + path.basename(template, '.ejs') + '.js', data);
-        });
+        var data = self.compileTemplate(template);
+        fs.writeFileSync(destDir + '/template_' + path.basename(template, '.ejs') + '.js', data);
       });
     });
 };
