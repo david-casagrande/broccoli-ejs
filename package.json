@@ -4,12 +4,14 @@
   "description": "Pre-compile ejs templates with broccoli",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/mocha tests/"
   },
   "author": "David Casagrande",
   "license": "ISC",
   "devDependencies": {
+    "broccoli": "^0.13.3",
     "broccoli-writer": "^0.1.1",
+    "chai": "^1.10.0",
     "ejs": "^1.0.0",
     "mocha": "^2.1.0",
     "rsvp": "^3.0.16"
